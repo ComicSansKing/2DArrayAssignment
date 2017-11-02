@@ -1,9 +1,12 @@
+char[][] tiles;
+
 PImage background0, background1, background2;
 PImage platform, coin, box, enemy, player, empty;
-PImage [] playerCharacter = new PImage[6];
+PImage [] playerCharacter;
 int narutoCounter;
 int tilesHigh, tilesWide;
 float tileWidth, tileHeight;
+
 //motion
 float x, y;
 float dx, dy;
@@ -11,12 +14,18 @@ boolean leftMotion, rightMotion, upwardMotion;
 
 void setup() {
   size(640, 480); //4:3 in 480p, early 2000's DVD bois
+  playerCharacter = new PImage[6];
   narutoCounter = 0;
-  
+
+  x = width/2;
+  y = height/2;
+
+  dx = 6;
+  dy = 6;
+
   for (int i = 0; i <playerCharacter.length; i++) {
     playerCharacter[i] = loadImage("narutoCharacter" + i + ".gif");
   }
-  
 }
 
 void draw() {
@@ -38,6 +47,7 @@ void keyPressed () {
     upwardMotion = true;
   }
 }
+
 void keyReleased () {
   //sets the booleans for motion back to false if the key is released
   if (key == 'd' || key == 'D') {
@@ -51,7 +61,6 @@ void keyReleased () {
   }
 }
 
-
 void moveCharacter () {
   //each if statement states if that boolean == true then set the x or y to the earlier mentioned movement speed, creates character motion 
   if (rightMotion) {
@@ -64,7 +73,6 @@ void moveCharacter () {
     y -= dy;
   }
 }
-
 
 void animateCharacter() {
   imageMode(CENTER);
@@ -81,6 +89,4 @@ void loadImages() {
   //background0 = loadImage(
   //background1 = loadImage(
   //background2 = loadImage(
-  
 }
-  
