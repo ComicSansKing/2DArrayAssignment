@@ -1,11 +1,17 @@
+
+//game tiles from https://opengameart.org/content/platformer-art-deluxehttps://opengameart.org/content/platformer-art-deluxe
+
 char[][] tiles;
 
 PImage background0, background1, background2;
-PImage platform, coin, box, enemy, player, empty;
+PImage grass, coin, spike;
 PImage [] playerCharacter;
 int narutoCounter;
 int tilesHigh, tilesWide;
 float tileWidth, tileHeight;
+String lines[];
+String backgroundLoader, levelLoader;
+
 
 //motion
 float x, y;
@@ -14,6 +20,9 @@ boolean leftMotion, rightMotion, upwardMotion;
 
 void setup() {
   size(640, 480); //4:3 in 480p, early 2000's DVD bois
+  levelLoader = "levels/0.txt";
+  backgroundLoader = "basic.jpeg";
+
   playerCharacter = new PImage[6];
   narutoCounter = 0;
 
@@ -22,6 +31,24 @@ void setup() {
 
   dx = 6;
   dy = 6;
+
+  lines = loadStrings(levelLoader);
+
+  tilesHigh = lines.length;
+  tilesWide = lines[0].length();
+
+  tileHeight = height/tilesHigh;
+  tileWidth = width/tilesWide;
+
+  tiles = new char[tilesWide][tilesHigh];
+
+  for (int y = 0; y < tilesHigh; y++) {
+    for (int x = 0; x < tilesWide; x++) {
+      char typeOfTile = lines[y].charAt(x);
+      tiles[x][y] = typeOfTile;
+    }
+  }
+
 
   for (int i = 0; i <playerCharacter.length; i++) {
     playerCharacter[i] = loadImage("narutoCharacter" + i + ".gif");
@@ -32,6 +59,7 @@ void draw() {
   background(255);
   moveCharacter();
   animateCharacter();
+  display();
 }
 
 void keyPressed () {
@@ -84,9 +112,34 @@ void animateCharacter() {
   }
 }
 
+void display() {
+  image(background0, 0, 0, width, height);
+  for (int y = 0; y < tilesHigh; y++) {
+    for (int x = 0; x < tilesWide; x++) {
+      displayTile(tiles[x][y], x, y);
+    }
+  }
+}
+
+void displayTile (char location, int x, int y) {
+  if (location == '#') {
+    image(grass, x*tileWidth, y*tileHeight, tileWidth, tileHeight);
+  } else if (location == 'C') {
+    image(coin, x*tileWidth, y*tileHeight, tileWidth, tileHeight);
+  } else if (location == 'S') {
+    image(spike, x*tileWidth, y*tileHeight, tileWidth, tileHeight);
+  }
+}
+
 void loadImages() {
+  background0 = loadImage(backgroundLoader);
   //load backgrounds
   //background0 = loadImage(
   //background1 = loadImage(
   //background2 = loadImage(
+
+  //load tiles
+  grass = loadImage("grass.png");
+  spike = loadImage("spikes.png");
+  coin = loadImage("coinBronze.png");
 }
