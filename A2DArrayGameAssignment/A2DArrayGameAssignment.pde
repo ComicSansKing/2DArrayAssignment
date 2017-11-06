@@ -21,13 +21,14 @@ boolean leftMotion, rightMotion, upwardMotion;
 void setup() {
   size(640, 480); //4:3 in 480p, early 2000's DVD bois
   levelLoader = "levels/0.txt";
-  backgroundLoader = "basic.jpeg";
+  backgroundLoader = "level0Background.gif";
 
+  background0 = 
   playerCharacter = new PImage[6];
   narutoCounter = 0;
 
   x = width/2;
-  y = height/2;
+  y = height/1.1;
 
   dx = 6;
   dy = 6;
@@ -47,6 +48,8 @@ void setup() {
       char typeOfTile = lines[y].charAt(x);
       tiles[x][y] = typeOfTile;
     }
+
+    loadImages();
   }
 
 
@@ -58,8 +61,9 @@ void setup() {
 void draw() {
   background(255);
   moveCharacter();
-  animateCharacter();
+
   display();
+  animateCharacter();
 }
 
 void keyPressed () {
@@ -105,7 +109,7 @@ void moveCharacter () {
 void animateCharacter() {
   imageMode(CENTER);
 
-  image(playerCharacter[narutoCounter], x, y, 100, 100);
+  image(playerCharacter[narutoCounter], x, y, 90, 90);
   if (frameCount % 2 == 0) {
     narutoCounter ++;
     narutoCounter = narutoCounter % playerCharacter.length;
@@ -113,15 +117,15 @@ void animateCharacter() {
 }
 
 void display() {
-  image(background0, 0, 0, width, height);
+  image(background0, width/2, height/2, width, height);
   for (int y = 0; y < tilesHigh; y++) {
     for (int x = 0; x < tilesWide; x++) {
-      displayTile(tiles[x][y], x, y);
+      displayTile(tiles[x][y], x+0.5, y+0.5);
     }
   }
 }
 
-void displayTile (char location, int x, int y) {
+void displayTile (char location, float x, float y) {
   if (location == '#') {
     image(grass, x*tileWidth, y*tileHeight, tileWidth, tileHeight);
   } else if (location == 'C') {
@@ -132,6 +136,7 @@ void displayTile (char location, int x, int y) {
 }
 
 void loadImages() {
+  imageMode(CENTER);
   background0 = loadImage(backgroundLoader);
   //load backgrounds
   //background0 = loadImage(
