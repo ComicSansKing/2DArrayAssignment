@@ -3,10 +3,11 @@
 
 char[][] tiles;
 
-PImage background0, background1, background2;
+PImage background1, background2;
 PImage grass, coin, spike;
 PImage [] playerCharacter;
-int narutoCounter;
+PImage [] background0;
+int narutoCounter, backgroundCounter;
 int tilesHigh, tilesWide;
 float tileWidth, tileHeight;
 String lines[];
@@ -23,16 +24,44 @@ void setup() {
   levelLoader = "levels/0.txt";
   backgroundLoader = "level0Background.gif";
 
-  background0 = 
+  loadArrays();
+  setValues();
+  tileSetup();
+  loadImages();
+}
+
+
+void draw() {
+  background(255);
+  moveCharacter();
+
+  displayBackground();
+  animateCharacter();
+}
+
+void loadArrays() {
+  background0 = new PImage[28];
   playerCharacter = new PImage[6];
   narutoCounter = 0;
+  backgroundCounter = 0;
 
+  for (int i = 0; i <playerCharacter.length; i++) {
+    playerCharacter[i] = loadImage("narutoCharacter" + i + ".gif");
+  }
+
+  for (int i = 0; i <background0.length; i++) {
+    background0[i] = loadImage("level0/" + "level0Background" + i + ".png");
+  }
+}
+
+void setValues() { 
   x = width/2;
   y = height/1.1;
-
   dx = 6;
   dy = 6;
+}
 
+void tileSetup() {
   lines = loadStrings(levelLoader);
 
   tilesHigh = lines.length;
@@ -48,23 +77,9 @@ void setup() {
       char typeOfTile = lines[y].charAt(x);
       tiles[x][y] = typeOfTile;
     }
-
-    loadImages();
-  }
-
-
-  for (int i = 0; i <playerCharacter.length; i++) {
-    playerCharacter[i] = loadImage("narutoCharacter" + i + ".gif");
   }
 }
 
-void draw() {
-  background(255);
-  moveCharacter();
-
-  display();
-  animateCharacter();
-}
 
 void keyPressed () {
   //sets the booleans for motion to true if the key is pressed
@@ -106,6 +121,7 @@ void moveCharacter () {
   }
 }
 
+
 void animateCharacter() {
   imageMode(CENTER);
 
@@ -116,12 +132,18 @@ void animateCharacter() {
   }
 }
 
-void display() {
-  image(background0, width/2, height/2, width, height);
+void displayBackground() {
+  image(background0[backgroundCounter], width/2, height/2, width, height);
+
   for (int y = 0; y < tilesHigh; y++) {
     for (int x = 0; x < tilesWide; x++) {
       displayTile(tiles[x][y], x+0.5, y+0.5);
     }
+  }
+
+  if (frameCount %  3 == 0) {
+    backgroundCounter ++;
+    backgroundCounter = backgroundCounter % background0.length;
   }
 }
 
@@ -137,7 +159,6 @@ void displayTile (char location, float x, float y) {
 
 void loadImages() {
   imageMode(CENTER);
-  background0 = loadImage(backgroundLoader);
   //load backgrounds
   //background0 = loadImage(
   //background1 = loadImage(
