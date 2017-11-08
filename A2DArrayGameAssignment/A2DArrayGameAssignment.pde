@@ -4,8 +4,10 @@
 char[][] tiles;
 
 PImage background1, background2;
-PImage grass, coin, spike;
+PImage grass, rasengan, spike;
 PImage [] playerCharacter;
+int characterX, characterY;
+
 PImage [] background0;
 int narutoCounter, backgroundCounter;
 int tilesHigh, tilesWide;
@@ -33,7 +35,7 @@ void setup() {
 
 void draw() {
   background(255);
-  moveCharacter();
+
 
   displayBackground();
   animateCharacter();
@@ -80,51 +82,38 @@ void tileSetup() {
   }
 }
 
-
 void keyPressed () {
   //sets the booleans for motion to true if the key is pressed
   //each key coresponds with a different direction
   if (key == 'd' || key == 'D') {
-    rightMotion = true;
+    moveRight();
   } 
   if (key == 'a' || key == 'A') {
-    leftMotion = true;
+    moveLeft();
   }
   if (key == ' ') {
     upwardMotion = true;
   }
 }
 
-void keyReleased () {
-  //sets the booleans for motion back to false if the key is released
-  if (key == 'd' || key == 'D') {
-    rightMotion = false;
-  } 
-  if (key == 'a' || key == 'A') {
-    leftMotion = false;
-  }
-  if (key == ' ') {
-    upwardMotion = false;
+void moveRight() {
+  if (characterX < tilesWide - 1) {
+    tiles[characterX][characterY] = 0;
+    characterX ++;
+    tiles[characterX][characterY] = 1;
   }
 }
 
-void moveCharacter () {
-  //each if statement states if that boolean == true then set the x or y to the earlier mentioned movement speed, creates character motion 
-  if (rightMotion) {
-    x += dx;
-  }
-  if (leftMotion) {
-    x -= dx;
-  }
-  if (upwardMotion) {
-    y -= dy;
+void moveLeft() {
+  if (characterX >= 1) {
+    tiles[characterX][characterY] = 0;
+    characterX--;
+    tiles[characterX][characterY] = 1;
   }
 }
-
 
 void animateCharacter() {
   imageMode(CENTER);
-
   image(playerCharacter[narutoCounter], x, y, 90, 90);
   if (frameCount % 2 == 0) {
     narutoCounter ++;
@@ -134,13 +123,11 @@ void animateCharacter() {
 
 void displayBackground() {
   image(background0[backgroundCounter], width/2, height/2, width, height);
-
   for (int y = 0; y < tilesHigh; y++) {
     for (int x = 0; x < tilesWide; x++) {
       displayTile(tiles[x][y], x+0.5, y+0.5);
     }
   }
-
   if (frameCount %  3 == 0) {
     backgroundCounter ++;
     backgroundCounter = backgroundCounter % background0.length;
@@ -150,10 +137,12 @@ void displayBackground() {
 void displayTile (char location, float x, float y) {
   if (location == '#') {
     image(grass, x*tileWidth, y*tileHeight, tileWidth, tileHeight);
-  } else if (location == 'C') {
-    image(coin, x*tileWidth, y*tileHeight, tileWidth, tileHeight);
+  } else if (location == 'R') {
+    image(rasengan, x*tileWidth, y*tileHeight, tileWidth, tileHeight);
   } else if (location == 'S') {
     image(spike, x*tileWidth, y*tileHeight, tileWidth, tileHeight);
+  } else if (location == 'P') {
+    //image(playerCharacter, x*tileWidth, y*tileHeight, tileWidth, tileHeight);
   }
 }
 
@@ -167,5 +156,5 @@ void loadImages() {
   //load tiles
   grass = loadImage("grass.png");
   spike = loadImage("spikes.png");
-  coin = loadImage("coinBronze.png");
+  rasengan = loadImage("Rasengan.png");
 }
